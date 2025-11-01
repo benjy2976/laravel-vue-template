@@ -1,0 +1,11 @@
+{
+    "agents": [
+        "codex"
+    ],
+    "editors": [
+        "vscode"
+    ],
+    "guidelines": [
+        "laravel/fortify"
+    ]
+}
