@@ -1,0 +1,9 @@
+{
+    "eslint.nodePath": "src/node_modules",
+    "eslint.workingDirectories": [
+
+        { "directory": "src", "changeProcessCWD": true }
+    ],
+    "eslint.useFlatConfig": true
+
+}
