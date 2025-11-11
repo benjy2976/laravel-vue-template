@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useInitials } from '@/composables/useInitials';
 import type { User } from '@/types';
 import { computed } from 'vue';
@@ -15,24 +14,35 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { getInitials } = useInitials();
 
-// Compute whether we should show the avatar image
-const showAvatar = computed(
-    () => props.user.avatar && props.user.avatar !== '',
+const hasAvatar = computed(
+    () => Boolean(props.user.avatar && props.user.avatar !== ''),
 );
 </script>
 
 <template>
-    <Avatar class="h-8 w-8 overflow-hidden rounded-lg">
-        <AvatarImage v-if="showAvatar" :src="user.avatar!" :alt="user.name" />
-        <AvatarFallback class="rounded-lg text-black dark:text-white">
-            {{ getInitials(user.name) }}
-        </AvatarFallback>
-    </Avatar>
-
-    <div class="grid flex-1 text-left text-sm leading-tight">
-        <span class="truncate font-medium">{{ user.name }}</span>
-        <span v-if="showEmail" class="truncate text-xs text-muted-foreground">{{
-            user.email
-        }}</span>
+    <div class="d-flex align-items-center gap-2 w-100">
+        <div
+            class="rounded-circle bg-secondary-subtle text-secondary-emphasis d-flex align-items-center justify-content-center overflow-hidden flex-shrink-0"
+            style="width: 40px; height: 40px"
+        >
+            <img
+                v-if="hasAvatar"
+                :src="user.avatar!"
+                :alt="user.name"
+                class="img-fluid w-100 h-100 object-fit-cover"
+            />
+            <span v-else class="fw-semibold">
+                {{ getInitials(user.name) }}
+            </span>
+        </div>
+        <div class="d-flex flex-column overflow-hidden text-start">
+            <span class="fw-semibold text-truncate">{{ user.name }}</span>
+            <small
+                v-if="showEmail"
+                class="text-muted text-truncate"
+            >
+                {{ user.email }}
+            </small>
+        </div>
     </div>
 </template>

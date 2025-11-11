@@ -1,9 +1,5 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { store } from '@/routes/password/confirm';
 import { Form, Head } from '@inertiajs/vue3';
@@ -21,14 +17,14 @@ import { Form, Head } from '@inertiajs/vue3';
             reset-on-success
             v-slot="{ errors, processing }"
         >
-            <div class="space-y-6">
-                <div class="grid gap-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
+            <div class="vstack gap-4">
+                <div>
+                    <label for="password" class="form-label">Password</label>
+                    <input
                         id="password"
                         type="password"
                         name="password"
-                        class="mt-1 block w-full"
+                        class="form-control"
                         required
                         autocomplete="current-password"
                         autofocus
@@ -37,16 +33,14 @@ import { Form, Head } from '@inertiajs/vue3';
                     <InputError :message="errors.password" />
                 </div>
 
-                <div class="flex items-center">
-                    <Button
-                        class="w-full"
-                        :disabled="processing"
-                        data-test="confirm-password-button"
-                    >
-                        <Spinner v-if="processing" />
-                        Confirm Password
-                    </Button>
-                </div>
+                <button
+                    class="btn btn-primary w-100"
+                    :disabled="processing"
+                    data-test="confirm-password-button"
+                    type="submit"
+                >
+                    Confirm Password
+                </button>
             </div>
         </Form>
     </AuthLayout>

@@ -1,12 +1,5 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-    PinInput,
-    PinInputGroup,
-    PinInputSlot,
-} from '@/components/ui/pin-input';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { store } from '@/routes/two-factor/login';
 import { Form, Head } from '@inertiajs/vue3';
@@ -45,7 +38,7 @@ const toggleRecoveryMode = (clearErrors: () => void): void => {
 };
 
 const code = ref<number[]>([]);
-const codeValue = computed<string>(() => code.value.join(''));
+const codeValue = computed<string>(() => code.value.join('').substring(0, 6));
 </script>
 
 <template>
@@ -68,35 +61,44 @@ const codeValue = computed<string>(() => code.value.join(''));
                     <div
                         class="flex flex-col items-center justify-center space-y-3 text-center"
                     >
-                        <div class="flex w-full items-center justify-center">
-                            <PinInput
-                                id="otp"
-                                placeholder="○"
-                                v-model="code"
-                                type="number"
-                                otp
-                            >
-                                <PinInputGroup>
-                                    <PinInputSlot
-                                        v-for="(id, index) in 6"
-                                        :key="id"
-                                        :index="index"
-                                        :disabled="processing"
-                                        autofocus
-                                    />
-                                </PinInputGroup>
-                            </PinInput>
+                        <div class="d-flex justify-content-between gap-2">
+                            <input
+                                v-for="(_, index) in 6"
+                                :key="index"
+                                type="text"
+                                maxlength="1"
+                                inputmode="numeric"
+                                class="form-control text-center fs-4 otp-slot"
+                                :disabled="processing"
+                                v-model="code[index]"
+                                @input="
+                                    ($event) => {
+                                        const value = $event.target.value.replace(/[^0-9]/g, '');
+                                        code[index] = value;
+                                        if (value && $event.target.nextElementSibling) {
+                                            $event.target.nextElementSibling.focus();
+                                        }
+                                    }
+                                "
+                                @keydown.backspace="
+                                    ($event) => {
+                                        if (!$event.target.value && $event.target.previousElementSibling) {
+                                            $event.target.previousElementSibling.focus();
+                                        }
+                                    }
+                                "
+                            />
                         </div>
                         <InputError :message="errors.code" />
                     </div>
-                    <Button type="submit" class="w-full" :disabled="processing"
-                        >Continue</Button
-                    >
-                    <div class="text-center text-sm text-muted-foreground">
+                    <button type="submit" class="btn btn-primary w-100" :disabled="processing">
+                        Continue
+                    </button>
+                    <div class="text-center small text-muted">
                         <span>or you can </span>
                         <button
                             type="button"
-                            class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                            class="btn btn-link p-0 align-baseline"
                             @click="() => toggleRecoveryMode(clearErrors)"
                         >
                             {{ authConfigContent.toggleText }}
@@ -112,23 +114,24 @@ const codeValue = computed<string>(() => code.value.join(''));
                     reset-on-error
                     #default="{ errors, processing, clearErrors }"
                 >
-                    <Input
+                    <input
                         name="recovery_code"
                         type="text"
+                        class="form-control"
                         placeholder="Enter recovery code"
                         :autofocus="showRecoveryInput"
                         required
                     />
                     <InputError :message="errors.recovery_code" />
-                    <Button type="submit" class="w-full" :disabled="processing"
-                        >Continue</Button
-                    >
+                    <button type="submit" class="btn btn-primary w-100" :disabled="processing">
+                        Continue
+                    </button>
 
-                    <div class="text-center text-sm text-muted-foreground">
+                    <div class="text-center small text-muted">
                         <span>or you can </span>
                         <button
                             type="button"
-                            class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                            class="btn btn-link p-0 align-baseline"
                             @click="() => toggleRecoveryMode(clearErrors)"
                         >
                             {{ authConfigContent.toggleText }}

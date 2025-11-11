@@ -2,6 +2,11 @@ import { onMounted, ref } from 'vue';
 
 type Appearance = 'light' | 'dark' | 'system';
 
+const applyTheme = (theme: 'light' | 'dark') => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    document.documentElement.dataset.bsTheme = theme;
+};
+
 export function updateTheme(value: Appearance) {
     if (typeof window === 'undefined') {
         return;
@@ -13,12 +18,9 @@ export function updateTheme(value: Appearance) {
         );
         const systemTheme = mediaQueryList.matches ? 'dark' : 'light';
 
-        document.documentElement.classList.toggle(
-            'dark',
-            systemTheme === 'dark',
-        );
+        applyTheme(systemTheme);
     } else {
-        document.documentElement.classList.toggle('dark', value === 'dark');
+        applyTheme(value);
     }
 }
 

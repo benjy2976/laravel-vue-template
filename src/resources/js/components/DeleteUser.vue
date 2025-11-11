@@ -6,7 +6,6 @@ import { useTemplateRef } from 'vue';
 // Components
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -29,20 +28,16 @@ const passwordInput = useTemplateRef('passwordInput');
             title="Delete account"
             description="Delete your account and all of its resources"
         />
-        <div
-            class="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10"
-        >
-            <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
-                <p class="font-medium">Warning</p>
-                <p class="text-sm">
-                    Please proceed with caution, this cannot be undone.
-                </p>
-            </div>
+        <div class="alert alert-warning rounded-4 p-4">
+            <h6 class="alert-heading mb-1">Warning</h6>
+            <p class="mb-3 small">
+                Please proceed with caution, this cannot be undone.
+            </p>
             <Dialog>
                 <DialogTrigger as-child>
-                    <Button variant="destructive" data-test="delete-user-button"
-                        >Delete account</Button
-                    >
+                    <button class="btn btn-warning" data-test="delete-user-button">
+                        Delete account
+                    </button>
                 </DialogTrigger>
                 <DialogContent>
                     <Form
@@ -85,8 +80,9 @@ const passwordInput = useTemplateRef('passwordInput');
 
                         <DialogFooter class="gap-2">
                             <DialogClose as-child>
-                                <Button
-                                    variant="secondary"
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
                                     @click="
                                         () => {
                                             clearErrors();
@@ -95,17 +91,17 @@ const passwordInput = useTemplateRef('passwordInput');
                                     "
                                 >
                                     Cancel
-                                </Button>
+                                </button>
                             </DialogClose>
 
-                            <Button
+                            <button
                                 type="submit"
-                                variant="destructive"
+                                class="btn btn-danger"
                                 :disabled="processing"
                                 data-test="confirm-delete-user-button"
                             >
                                 Delete account
-                            </Button>
+                            </button>
                         </DialogFooter>
                     </Form>
                 </DialogContent>

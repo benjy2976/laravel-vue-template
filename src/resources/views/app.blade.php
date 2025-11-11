@@ -1,21 +1,30 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"  @class(['dark' => ($appearance ?? 'system') == 'dark'])>
+<html
+    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    @class(['dark' => ($appearance ?? 'system') == 'dark'])
+    data-bs-theme="{{ ($appearance ?? 'system') === 'dark' ? 'dark' : 'light' }}"
+>
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
-            (function() {
-                const appearance = '{{ $appearance ?? "system" }}';
+            (function () {
+                const appearance = @json($appearance ?? 'system');
 
-                if (appearance === 'system') {
-                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const setTheme = (theme) => {
+                    document.documentElement.classList.toggle('dark', theme === 'dark');
+                    document.documentElement.dataset.bsTheme = theme;
+                };
 
-                    if (prefersDark) {
-                        document.documentElement.classList.add('dark');
-                    }
+                if (appearance === 'dark' || appearance === 'light') {
+                    setTheme(appearance);
+                    return;
                 }
+
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(prefersDark ? 'dark' : 'light');
             })();
         </script>
 
@@ -25,7 +34,7 @@
                 background-color: oklch(1 0 0);
             }
 
-            html.dark {
+            html[data-bs-theme='dark'] {
                 background-color: oklch(0.145 0 0);
             }
         </style>
@@ -42,7 +51,7 @@
         @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
         @inertiaHead
     </head>
-    <body class="font-sans antialiased">
+    <body class="bg-body font-sans">
         @inertia
     </body>
 </html>

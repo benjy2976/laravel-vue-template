@@ -1,54 +1,27 @@
 <script setup lang="ts">
 import UserInfo from '@/components/UserInfo.vue';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    useSidebar,
-} from '@/components/ui/sidebar';
+import UserMenuContent from '@/components/UserMenuContent.vue';
 import { usePage } from '@inertiajs/vue3';
 import { ChevronsUpDown } from 'lucide-vue-next';
-import UserMenuContent from './UserMenuContent.vue';
+import { computed } from 'vue';
 
 const page = usePage();
-const user = page.props.auth.user;
-const { isMobile, state } = useSidebar();
+const user = computed(() => page.props.auth.user);
 </script>
 
 <template>
-    <SidebarMenu>
-        <SidebarMenuItem>
-            <DropdownMenu>
-                <DropdownMenuTrigger as-child>
-                    <SidebarMenuButton
-                        size="lg"
-                        class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                        data-test="sidebar-menu-button"
-                    >
-                        <UserInfo :user="user" />
-                        <ChevronsUpDown class="ml-auto size-4" />
-                    </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                    class="w-(--reka-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-                    :side="
-                        isMobile
-                            ? 'bottom'
-                            : state === 'collapsed'
-                              ? 'left'
-                              : 'bottom'
-                    "
-                    align="end"
-                    :side-offset="4"
-                >
-                    <UserMenuContent :user="user" />
-                </DropdownMenuContent>
-            </DropdownMenu>
-        </SidebarMenuItem>
-    </SidebarMenu>
+    <div class="dropdown w-100">
+        <button
+            class="btn btn-outline-secondary d-flex align-items-center w-100"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+        >
+            <UserInfo :user="user" />
+            <ChevronsUpDown class="ms-auto" :size="16" />
+        </button>
+        <div class="dropdown-menu dropdown-menu-end w-100 shadow">
+            <UserMenuContent :user="user" />
+        </div>
+    </div>
 </template>

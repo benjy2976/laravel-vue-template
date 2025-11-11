@@ -3,13 +3,11 @@ import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileCo
 import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import { Form, Head, Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 import DeleteUser from '@/components/DeleteUser.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { type BreadcrumbItem } from '@/types';
@@ -22,14 +20,14 @@ interface Props {
 defineProps<Props>();
 
 const breadcrumbItems: BreadcrumbItem[] = [
-    {
-        title: 'Profile settings',
-        href: edit().url,
-    },
+  {
+    title : 'Profile settings',
+    href  : edit().url,
+  },
 ];
 
 const page = usePage();
-const user = page.props.auth.user;
+const user = computed(() => page.props.auth.user);
 </script>
 
 <template>
@@ -45,45 +43,45 @@ const user = page.props.auth.user;
 
                 <Form
                     v-bind="ProfileController.update.form()"
-                    class="space-y-6"
+                    class="vstack gap-4"
                     v-slot="{ errors, processing, recentlySuccessful }"
                 >
-                    <div class="grid gap-2">
-                        <Label for="name">Name</Label>
-                        <Input
+                    <div>
+                        <label for="name" class="form-label">Name</label>
+                        <input
                             id="name"
-                            class="mt-1 block w-full"
+                            class="form-control"
                             name="name"
-                            :default-value="user.name"
+                            :value="user.name"
                             required
                             autocomplete="name"
                             placeholder="Full name"
                         />
-                        <InputError class="mt-2" :message="errors.name" />
+                        <InputError :message="errors.name" />
                     </div>
 
-                    <div class="grid gap-2">
-                        <Label for="email">Email address</Label>
-                        <Input
+                    <div>
+                        <label for="email" class="form-label">Email address</label>
+                        <input
                             id="email"
                             type="email"
-                            class="mt-1 block w-full"
+                            class="form-control"
                             name="email"
-                            :default-value="user.email"
+                            :value="user.email"
                             required
                             autocomplete="username"
                             placeholder="Email address"
                         />
-                        <InputError class="mt-2" :message="errors.email" />
+                        <InputError :message="errors.email" />
                     </div>
 
                     <div v-if="mustVerifyEmail && !user.email_verified_at">
-                        <p class="-mt-4 text-sm text-muted-foreground">
+                        <p class="text-warning small mb-2">
                             Your email address is unverified.
                             <Link
                                 :href="send()"
                                 as="button"
-                                class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                                class="btn btn-link btn-sm px-0 align-baseline"
                             >
                                 Click here to resend the verification email.
                             </Link>
@@ -91,29 +89,32 @@ const user = page.props.auth.user;
 
                         <div
                             v-if="status === 'verification-link-sent'"
-                            class="mt-2 text-sm font-medium text-green-600"
+                            class="alert alert-success py-2 px-3"
                         >
                             A new verification link has been sent to your email
                             address.
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-4">
-                        <Button
+                    <div class="d-flex align-items-center gap-3">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
                             :disabled="processing"
                             data-test="update-profile-button"
-                            >Save</Button
                         >
+                            Save
+                        </button>
 
                         <Transition
-                            enter-active-class="transition ease-in-out"
+                            enter-active-class="fade show"
                             enter-from-class="opacity-0"
-                            leave-active-class="transition ease-in-out"
+                            leave-active-class="fade"
                             leave-to-class="opacity-0"
                         >
                             <p
                                 v-show="recentlySuccessful"
-                                class="text-sm text-neutral-600"
+                                class="text-success small mb-0"
                             >
                                 Saved.
                             </p>

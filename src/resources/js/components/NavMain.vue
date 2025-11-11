@@ -1,38 +1,40 @@
 <script setup lang="ts">
-import {
-    SidebarGroup,
-    SidebarGroupLabel,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-} from '@/components/ui/sidebar';
 import { urlIsActive } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 
-defineProps<{
+const props = defineProps<{
     items: NavItem[];
 }>();
 
 const page = usePage();
+
+const isActive = (href: NavItem['href']) => urlIsActive(href, page.url);
 </script>
 
 <template>
-    <SidebarGroup class="px-2 py-0">
-        <SidebarGroupLabel>Platform</SidebarGroupLabel>
-        <SidebarMenu>
-            <SidebarMenuItem v-for="item in items" :key="item.title">
-                <SidebarMenuButton
-                    as-child
-                    :is-active="urlIsActive(item.href, page.url)"
-                    :tooltip="item.title"
+    <div class="mb-4">
+        <p class="text-uppercase text-muted small mb-2">Platform</p>
+        <ul class="nav nav-pills flex-column gap-2">
+            <li
+                v-for="item in props.items"
+                :key="item.title"
+                class="nav-item"
+            >
+                <Link
+                    :href="item.href"
+                    class="nav-link d-flex align-items-center gap-2"
+                    :class="{ active: isActive(item.href) }"
                 >
-                    <Link :href="item.href">
-                        <component :is="item.icon" />
-                        <span>{{ item.title }}</span>
-                    </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-        </SidebarMenu>
-    </SidebarGroup>
+                    <component
+                        v-if="item.icon"
+                        :is="item.icon"
+                        class="opacity-75"
+                        :size="16"
+                    />
+                    <span>{{ item.title }}</span>
+                </Link>
+            </li>
+        </ul>
+    </div>
 </template>
