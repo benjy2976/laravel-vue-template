@@ -16,22 +16,22 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-    requiresConfirmation: false,
-    twoFactorEnabled: false,
+  requiresConfirmation : false,
+  twoFactorEnabled     : false,
 });
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Two-Factor Authentication',
-        href: show.url(),
-    },
+  {
+    title : 'Two-Factor Authentication',
+    href  : show.url(),
+  },
 ];
 
 const { hasSetupData, clearTwoFactorAuthData } = useTwoFactorAuth();
 const showSetupModal = ref<boolean>(false);
 
 onUnmounted(() => {
-    clearTwoFactorAuthData();
+  clearTwoFactorAuthData();
 });
 </script>
 

@@ -49,7 +49,9 @@ defineProps<{
 
             <div>
                 <div class="d-flex justify-content-between align-items-center">
-                    <label for="password" class="form-label mb-0"
+                    <label
+for="password"
+class="form-label mb-0"
                         >Password</label
                     >
                     <Link
@@ -97,13 +99,16 @@ defineProps<{
                 <span
                     v-if="processing"
                     class="spinner-border spinner-border-sm me-2"
-                />
+                ></span>
                 Log in
             </button>
 
             <div class="text-center small text-muted" v-if="canRegister">
                 Don't have an account?
-                <Link :href="register()" :tabindex="5" class="btn btn-link p-0"
+                <Link
+:href="register()"
+:tabindex="5"
+class="btn btn-link p-0"
                     >Sign up</Link
                 >
             </div>

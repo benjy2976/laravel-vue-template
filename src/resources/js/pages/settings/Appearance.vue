@@ -10,10 +10,10 @@ import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit } from '@/routes/appearance';
 
 const breadcrumbItems: BreadcrumbItem[] = [
-    {
-        title: 'Appearance settings',
-        href: edit().url,
-    },
+  {
+    title : 'Appearance settings',
+    href  : edit().url,
+  },
 ];
 </script>
 

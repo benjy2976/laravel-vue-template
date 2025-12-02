@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
 import { home } from '@/routes';
 import { Link } from '@inertiajs/vue3';
@@ -41,7 +41,7 @@ defineProps<{
                         </CardDescription>
                     </CardHeader>
                     <CardContent class="px-10 py-8">
-                        <slot />
+                        <slot ></slot>
                     </CardContent>
                 </Card>
             </div>

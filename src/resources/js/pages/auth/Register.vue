@@ -66,7 +66,9 @@ import { Form, Head, Link } from '@inertiajs/vue3';
             </div>
 
             <div>
-                <label for="password_confirmation" class="form-label"
+                <label
+for="password_confirmation"
+class="form-label"
                     >Confirm password</label
                 >
                 <input
@@ -92,13 +94,16 @@ import { Form, Head, Link } from '@inertiajs/vue3';
                 <span
                     v-if="processing"
                     class="spinner-border spinner-border-sm me-2"
-                />
+                ></span>
                 Create account
             </button>
 
             <div class="text-center small text-muted">
                 Already have an account?
-                <Link :href="login()" class="btn btn-link p-0" :tabindex="6"
+                <Link
+:href="login()"
+class="btn btn-link p-0"
+:tabindex="6"
                     >Log in</Link
                 >
             </div>

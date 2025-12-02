@@ -11,7 +11,7 @@ interface Props {
 }
 
 const handleLogout = () => {
-    router.flushAll();
+  router.flushAll();
 };
 
 defineProps<Props>();

@@ -5,14 +5,14 @@ import type { BreadcrumbItemType } from '@/types';
 import { Menu } from 'lucide-vue-next';
 
 const props = withDefaults(
-    defineProps<{
+  defineProps<{
         breadcrumbs?: BreadcrumbItemType[];
         offcanvasId?: string;
     }>(),
-    {
-        breadcrumbs: () => [],
-        offcanvasId: SIDEBAR_OFFCANVAS_ID,
-    },
+  {
+    breadcrumbs : () => [],
+    offcanvasId : SIDEBAR_OFFCANVAS_ID,
+  },
 );
 </script>
 

@@ -7,12 +7,12 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-    breadcrumbs: () => [],
+  breadcrumbs : () => [],
 });
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <slot />
+        <slot ></slot>
     </AppLayout>
 </template>

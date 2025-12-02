@@ -4,7 +4,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-    variant: 'header',
+  variant : 'header',
 });
 </script>
 
@@ -13,12 +13,12 @@ withDefaults(defineProps<Props>(), {
         v-if="variant === 'header'"
         class="d-flex min-vh-100 w-100 flex-column bg-body"
     >
-        <slot />
+        <slot ></slot>
     </div>
     <div
         v-else
         class="d-flex vh-100 w-100 flex-row bg-body-secondary overflow-hidden"
     >
-        <slot />
+        <slot ></slot>
     </div>
 </template>

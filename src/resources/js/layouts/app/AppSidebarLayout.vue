@@ -11,7 +11,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-    breadcrumbs: () => [],
+  breadcrumbs : () => [],
 });
 </script>
 
@@ -24,7 +24,7 @@ withDefaults(defineProps<Props>(), {
                 :offcanvas-id="SIDEBAR_OFFCANVAS_ID"
             />
             <div class="flex-grow-1 p-4">
-                <slot />
+                <slot ></slot>
             </div>
         </AppContent>
     </AppShell>

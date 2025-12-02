@@ -48,7 +48,7 @@ defineProps<{
                 <span
                     v-if="processing"
                     class="spinner-border spinner-border-sm me-2"
-                />
+                ></span>
                 Email password reset link
             </button>
 

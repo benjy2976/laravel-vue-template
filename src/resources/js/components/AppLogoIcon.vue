@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from 'vue';
 
 defineOptions({
-    inheritAttrs: false,
+  inheritAttrs : false,
 });
 
 interface Props {

@@ -9,7 +9,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    title: 'Something went wrong.',
+  title : 'Something went wrong.',
 });
 
 const uniqueErrors = computed(() => Array.from(new Set(props.errors)));

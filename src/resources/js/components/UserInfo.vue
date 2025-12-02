@@ -9,13 +9,13 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    showEmail: false,
+  showEmail : false,
 });
 
 const { getInitials } = useInitials();
 
 const hasAvatar = computed(
-    () => Boolean(props.user.avatar && props.user.avatar !== ''),
+  () => Boolean(props.user.avatar && props.user.avatar !== ''),
 );
 </script>
 

@@ -10,10 +10,10 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbItems: BreadcrumbItem[] = [
-    {
-        title: 'Password settings',
-        href: edit().url,
-    },
+  {
+    title : 'Password settings',
+    href  : edit().url,
+  },
 ];
 </script>
 
@@ -69,7 +69,9 @@ const breadcrumbItems: BreadcrumbItem[] = [
                     </div>
 
                     <div>
-                        <label for="password_confirmation" class="form-label"
+                        <label
+for="password_confirmation"
+class="form-label"
                             >Confirm password</label
                         >
                         <input

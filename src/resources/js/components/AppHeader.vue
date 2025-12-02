@@ -5,28 +5,28 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuList,
-    navigationMenuTriggerStyle,
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from '@/components/ui/sheet';
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from '@/components/ui/tooltip';
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
@@ -42,43 +42,43 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    breadcrumbs: () => [],
+  breadcrumbs : () => [],
 });
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
 
 const isCurrentRoute = computed(
-    () => (url: NonNullable<InertiaLinkProps['href']>) =>
-        urlIsActive(url, page.url),
+  () => (url: NonNullable<InertiaLinkProps['href']>) =>
+    urlIsActive(url, page.url),
 );
 
 const activeItemStyles = computed(
-    () => (url: NonNullable<InertiaLinkProps['href']>) =>
-        isCurrentRoute.value(toUrl(url))
-            ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100'
-            : '',
+  () => (url: NonNullable<InertiaLinkProps['href']>) =>
+    isCurrentRoute.value(toUrl(url))
+      ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100'
+      : '',
 );
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
+  {
+    title : 'Dashboard',
+    href  : dashboard(),
+    icon  : LayoutGrid,
+  },
 ];
 
 const rightNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
+  {
+    title : 'Repository',
+    href  : 'https://github.com/laravel/vue-starter-kit',
+    icon  : Folder,
+  },
+  {
+    title : 'Documentation',
+    href  : 'https://laravel.com/docs/starter-kits#vue',
+    icon  : BookOpen,
+  },
 ];
 </script>
 

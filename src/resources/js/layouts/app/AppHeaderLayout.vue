@@ -9,7 +9,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-    breadcrumbs: () => [],
+  breadcrumbs : () => [],
 });
 </script>
 
@@ -17,7 +17,7 @@ withDefaults(defineProps<Props>(), {
     <AppShell class="flex-col">
         <AppHeader :breadcrumbs="breadcrumbs" />
         <AppContent>
-            <slot />
+            <slot ></slot>
         </AppContent>
     </AppShell>
 </template>

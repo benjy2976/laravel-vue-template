@@ -10,22 +10,22 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 const sidebarNavItems: NavItem[] = [
-    {
-        title: 'Profile',
-        href: editProfile(),
-    },
-    {
-        title: 'Password',
-        href: editPassword(),
-    },
-    {
-        title: 'Two-Factor Auth',
-        href: show(),
-    },
-    {
-        title: 'Appearance',
-        href: editAppearance(),
-    },
+  {
+    title : 'Profile',
+    href  : editProfile(),
+  },
+  {
+    title : 'Password',
+    href  : editPassword(),
+  },
+  {
+    title : 'Two-Factor Auth',
+    href  : show(),
+  },
+  {
+    title : 'Appearance',
+    href  : editAppearance(),
+  },
 ];
 
 const page = usePage();
@@ -56,7 +56,7 @@ const currentPath = computed(() => page.url);
 
             <div class="col-lg-9">
                 <section class="vstack gap-5">
-                    <slot />
+                    <slot ></slot>
                 </section>
             </div>
         </div>

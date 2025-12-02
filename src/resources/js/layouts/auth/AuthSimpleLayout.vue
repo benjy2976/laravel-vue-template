@@ -22,7 +22,7 @@ defineProps<{
             </div>
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
-                    <slot />
+                    <slot ></slot>
                 </div>
             </div>
         </div>

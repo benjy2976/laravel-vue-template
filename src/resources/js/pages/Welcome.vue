@@ -3,12 +3,12 @@ import { dashboard, login, register } from '@/routes';
 import { Head, Link } from '@inertiajs/vue3';
 
 withDefaults(
-    defineProps<{
+  defineProps<{
         canRegister: boolean;
     }>(),
-    {
-        canRegister: true,
-    },
+  {
+    canRegister : true,
+  },
 );
 </script>
 
