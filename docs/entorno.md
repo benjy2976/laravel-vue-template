@@ -11,7 +11,8 @@
 | Servicio | Puerto local | Descripcion |
 |----------|--------------|-------------|
 | `web` | `8080` | Nginx sirviendo Laravel desde `src/public` |
-| `app` | `5173` | PHP-FPM 8.3 con Composer, Node y Vite HMR |
+| `app` | interno `9000` | PHP-FPM 8.3 con Composer, Node y npm |
+| `vite` | `5173` | Vite HMR para assets Inertia/Vue |
 | `db` | `5432` | PostgreSQL 17 |
 | `redis` | `6379` | Cache/sesiones/colas segun `.env` |
 | `mailpit` | `8025`, `1025` | UI y SMTP de desarrollo |
@@ -50,5 +51,6 @@ Variables clave:
 ## Notas
 
 - El contenedor `app` instala PHP, extensiones Laravel, Composer, Node y npm.
+- El servicio `vite` usa la misma imagen de `app` y arranca `npm run dev` automaticamente con `docker compose up`.
 - Vite debe escuchar en `0.0.0.0` dentro del contenedor para exponer HMR al host.
 - `bootstrap.sh` y `Makefile` deben operar sobre `src/.env`, no sobre `.env` de la raiz.

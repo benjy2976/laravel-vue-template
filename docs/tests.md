@@ -16,6 +16,10 @@ docker compose exec -u app app bash -lc "php artisan test tests/Feature/Auth/Aut
 # Base administrativa heredable
 docker compose exec -u app app bash -lc "php artisan test tests/Feature/Admin/AdminAccessTest.php"
 
+# Frontend
+docker compose exec -u app app bash -lc "npm run build"
+docker compose exec -u app app bash -lc "npm run lint"
+
 # Pest directo dentro de src
 cd src
 ./vendor/bin/pest
@@ -45,6 +49,10 @@ cd src
 ### Admin base
 - `tests/Feature/Admin/AdminAccessTest.php`
 
+### UX/CRUD frontend
+- Validar con ESLint y `npm run build`.
+- Si el cambio solo toca componentes Vue sin backend, no requiere Pest salvo que altere rutas o props compartidas.
+
 ## Reglas
 
 - Usar Pest para tests nuevos.
@@ -52,4 +60,5 @@ cd src
 - Al tocar auth, settings o middleware, ejecutar el test puntual relacionado.
 - Al tocar migraciones o modelo `User`, ejecutar auth/settings relacionados.
 - Al tocar roles, permisos, menu dinamico o administracion, ejecutar `tests/Feature/Admin/AdminAccessTest.php`.
+- Al tocar flash compartido, props Inertia o helpers globales, ejecutar build frontend y tests de feature afectados.
 - Al tocar frontend sin backend, ejecutar build/lint segun alcance.

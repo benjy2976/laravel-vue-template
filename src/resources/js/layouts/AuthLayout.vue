@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppToastViewport from '@/components/feedback/AppToastViewport.vue';
 import AuthLayout from '@/layouts/auth/AuthSimpleLayout.vue';
 
 defineProps<{
@@ -11,4 +12,5 @@ defineProps<{
     <AuthLayout :title="title" :description="description">
         <slot ></slot>
     </AuthLayout>
+    <AppToastViewport />
 </template>

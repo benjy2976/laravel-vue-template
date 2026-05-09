@@ -1,9 +1,18 @@
 <script setup lang="ts">
+import {
+  CrudPageHeader,
+  CrudPagination,
+  CrudSearchForm,
+  CrudTable,
+  type CrudColumn,
+  type CrudPaginator,
+} from '@/components/crud';
+import FormErrorSummary from '@/components/forms/FormErrorSummary.vue';
 import InputError from '@/components/InputError.vue';
 import { useAuthorization } from '@/composables/useAuthorization';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 interface RoleOption {
@@ -20,13 +29,8 @@ interface UserRow {
   roles: RoleOption[];
 }
 
-interface UsersPaginator {
-  data: UserRow[];
-  links: { url: string | null; label: string; active: boolean }[];
-}
-
 const props = defineProps<{
-  users: UsersPaginator;
+  users: CrudPaginator<UserRow>;
   roles: RoleOption[];
   filters: { search?: string };
 }>();
@@ -34,6 +38,12 @@ const props = defineProps<{
 const breadcrumbs: BreadcrumbItem[] = [
   { title: 'Administration', href: '/admin/users' },
   { title: 'Users', href: '/admin/users' },
+];
+
+const userColumns: CrudColumn[] = [
+  { key: 'name', label: 'Name' },
+  { key: 'email', label: 'Email' },
+  { key: 'roles', label: 'Roles' },
 ];
 
 const { can } = useAuthorization();
@@ -89,18 +99,6 @@ const destroyUser = (user: UserRow) => {
 
   router.delete(`/admin/users/${user.id}`, { preserveScroll: true });
 };
-
-const applySearch = () => {
-  router.get('/admin/users', { search: search.value || undefined }, {
-    preserveState : true,
-    replace       : true,
-  });
-};
-
-const paginationLabel = (label: string) => label
-  .replace('&laquo;', '')
-  .replace('&raquo;', '')
-  .trim();
 </script>
 
 <template>
@@ -108,93 +106,59 @@ const paginationLabel = (label: string) => label
 
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="vstack gap-4">
-      <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
-        <div>
-          <h1 class="h3 mb-1">Users</h1>
-          <p class="text-muted mb-0">Manage generic user access for projects derived from this template.</p>
-        </div>
-
-        <form class="d-flex gap-2" @submit.prevent="applySearch">
-          <input
+      <CrudPageHeader
+        title="Users"
+        description="Manage generic user access for projects derived from this template."
+      >
+        <template #actions>
+          <CrudSearchForm
             v-model="search"
-            type="search"
-            class="form-control"
+            route="/admin/users"
             placeholder="Search users"
           />
-          <button type="submit" class="btn btn-outline-secondary">Search</button>
-        </form>
-      </div>
+        </template>
+      </CrudPageHeader>
 
       <div class="row g-4">
         <div class="col-lg-7">
           <div class="card border-0 shadow-sm">
             <div class="card-body">
-              <div class="table-responsive">
-                <table class="table align-middle">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Roles</th>
-                      <th class="text-end">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="user in props.users.data" :key="user.id">
-                      <td>{{ user.name }}</td>
-                      <td>{{ user.email }}</td>
-                      <td>
-                        <span
-                          v-for="role in user.roles"
-                          :key="role.id"
-                          class="badge text-bg-secondary me-1"
-                        >
-                          {{ role.label || role.name }}
-                        </span>
-                      </td>
-                      <td class="text-end">
-                        <button
-                          v-if="can('users.update')"
-                          type="button"
-                          class="btn btn-sm btn-outline-primary me-2"
-                          @click="editUser(user)"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          v-if="can('users.delete')"
-                          type="button"
-                          class="btn btn-sm btn-outline-danger"
-                          @click="destroyUser(user)"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                    <tr v-if="!props.users.data.length">
-                      <td colspan="4" class="text-center text-muted py-4">No users found.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <nav v-if="props.users.links.length > 3" aria-label="Users pagination">
-                <ul class="pagination mb-0">
-                  <li
-                    v-for="link in props.users.links"
-                    :key="link.label"
-                    class="page-item"
-                    :class="{ active: link.active, disabled: !link.url }"
+              <CrudTable
+                :columns="userColumns"
+                :rows="props.users.data"
+                empty-message="No users found."
+              >
+                <template #cell-roles="{ row }">
+                  <span
+                    v-for="role in row.roles"
+                    :key="role.id"
+                    class="badge text-bg-secondary me-1"
                   >
-                    <Link
-                      class="page-link"
-                      :href="link.url || '#'"
-                    >
-                      {{ paginationLabel(link.label) }}
-                    </Link>
-                  </li>
-                </ul>
-              </nav>
+                    {{ role.label || role.name }}
+                  </span>
+                </template>
+
+                <template #actions="{ row }">
+                  <button
+                    v-if="can('users.update')"
+                    type="button"
+                    class="btn btn-sm btn-outline-primary me-2"
+                    @click="editUser(row)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    v-if="can('users.delete')"
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    @click="destroyUser(row)"
+                  >
+                    Delete
+                  </button>
+                </template>
+              </CrudTable>
+
+              <CrudPagination :links="props.users.links" label="Users pagination" />
             </div>
           </div>
         </div>
@@ -205,6 +169,8 @@ const paginationLabel = (label: string) => label
               <h2 class="h5 mb-3">{{ isEditing ? 'Edit user' : 'Create user' }}</h2>
 
               <form class="vstack gap-3" @submit.prevent="submit">
+                <FormErrorSummary :errors="form.errors" />
+
                 <div>
                   <label for="name" class="form-label">Name</label>
                   <input id="name" v-model="form.name" type="text" class="form-control" />

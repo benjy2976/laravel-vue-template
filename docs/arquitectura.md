@@ -10,6 +10,7 @@ Definir el mapa global del template, sus capas y el flujo base de datos entre La
 - Frontend integrado: Vue 3, TypeScript, Inertia Vue, Vite, Tailwind CSS 4 y Bootstrap 5.
 - UI base: componentes propios y componentes `resources/js/components/ui/**`.
 - Administracion base: usuarios, roles, permisos y menu dinamico por permisos.
+- UX transversal: toasts globales, resumen de errores y componentes CRUD reutilizables.
 - Tests: Pest/PHPUnit.
 - Infraestructura: Docker Compose con PHP-FPM, Nginx, PostgreSQL 17, Redis y Mailpit.
 
@@ -49,6 +50,9 @@ src/
 src/resources/js/
 ├── actions/                      # Wayfinder: acciones generadas desde backend
 ├── components/                   # Componentes compartidos
+├── components/crud/              # Toolkit CRUD reutilizable
+├── components/feedback/          # Feedback global y toasts
+├── components/forms/             # Helpers de formularios
 ├── components/ui/                # Componentes UI base
 ├── composables/                  # Logica reusable de Vue
 ├── layouts/                      # Layouts de app, auth y settings
@@ -75,6 +79,13 @@ src/resources/js/
 - El sidebar autenticado consume `auth.menu`, generado desde permisos con metadatos de menu.
 - La UI administrativa vive en `src/resources/js/pages/admin/**` y solo cubre usuarios, roles y metadatos de permisos.
 
+## UX transversal y CRUD toolkit
+
+- Flash Laravel se comparte en `HandleInertiaRequests` como `flash` y se renderiza con `AppToastViewport`.
+- Para formularios, combinar `FormErrorSummary` con `InputError` por campo.
+- CRUDs nuevos deben preferir `CrudPageHeader`, `CrudSearchForm`, `CrudTable` y `CrudPagination`.
+- El toolkit solo provee estructura UI; filtros, columnas y acciones viven en cada modulo.
+
 ## Principios de diseno
 
 - Mantener el template generico y adaptable.
@@ -91,6 +102,8 @@ src/resources/js/
 - `src/resources/js/components/InputError.vue`: salida comun para errores de formularios.
 - `src/resources/js/composables/useAppearance.ts`: preferencia visual.
 - `src/resources/js/composables/useAuthorization.ts`: lectura de roles/permisos compartidos por Inertia.
+- `src/resources/js/composables/useFormErrors.ts`: normalizacion de errores de formularios.
+- `src/resources/js/composables/useToasts.ts`: API de notificaciones globales.
 - `src/resources/js/composables/useTwoFactorAuth.ts`: flujo de two-factor.
 
 ## Donde vive cada tipo de conocimiento
@@ -105,3 +118,4 @@ src/resources/js/
 | Cobertura y validacion | `docs/tests.md` |
 | Reglas Laravel Boost | `src/AGENTS.md` |
 | Negocio/flujo por area | `context.md` del area |
+| Componentes transversales | `src/resources/js/components/context.md` |

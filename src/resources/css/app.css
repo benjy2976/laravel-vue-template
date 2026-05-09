@@ -84,6 +84,33 @@ a:hover {
     font-weight: 600;
 }
 
+.app-toast-viewport {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1080;
+    display: flex;
+    width: min(360px, calc(100vw - 2rem));
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.app-toast-viewport .toast {
+    width: 100%;
+}
+
+.app-data-table th {
+    white-space: nowrap;
+}
+
+.app-data-table td {
+    vertical-align: middle;
+}
+
+.app-empty-state {
+    min-height: 9rem;
+}
+
 :root[data-bs-theme='dark'] .btn-outline-secondary {
     color: #e2e8f0;
     border-color: rgba(226, 232, 240, 0.4);

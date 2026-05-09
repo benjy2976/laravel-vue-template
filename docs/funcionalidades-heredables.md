@@ -20,17 +20,17 @@ Escala usada:
 | Gestion de roles | Si, CRUD administrativo base | Si | Baja/Media | Alta | Bajo | Medio | Alta | Medio | Media/Alta | Implementado; conservar roles de sistema | Completada | Permite crear/editar roles y asignar permisos, bloqueando eliminacion de roles de sistema. No incluye roles de negocio. |
 | Gestion de permisos | Si, listado y metadatos de menu | Si | Media | Alta | Bajo/Medio | Medio | Alta | Medio/Alto | Media | Implementado con alcance controlado | Completada | El template permite editar metadatos de permisos, pero no crear/eliminar permisos desde UI para evitar romper autorizacion base. |
 | Layout administrativo con sidebar/topbar | Si, con menu dinamico | Si | Baja | Alta | Bajo | Bajo/Medio | Alta | Bajo/Medio | Alta | Implementado; mantener generico | Completada | `AppSidebar` consume `auth.menu` y `NavMain` soporta grupos anidados sin imponer secciones de negocio. |
-| Toasts globales | No como servicio global estandar | Si | Baja/Media | Alta | Bajo | Bajo | Alta | Bajo | Alta | Migrar adaptado | Alta | Bajo acoplamiento y mucha utilidad para formularios, acciones CRUD y errores. Debe adaptarse a Inertia/Vue actual. |
-| Helper de errores HTTP/forms | Parcial, existe `InputError` y errores de Inertia | Si | Media | Alta | Bajo | Medio | Alta | Bajo/Medio | Alta | Migrar adaptado | Alta | Conviene centralizar mensajes de error, severidad y errores generales. Debe integrarse con `<Form>`/`useForm` de Inertia. |
-| Tabla/listado reusable | No | Si | Media | Alta | Bajo | Medio | Media/Alta | Medio | Media | Migrar adaptado | Media/Alta | Acelera CRUDs. Debe ser generica y compatible con el sistema visual del template, no una copia exacta si el estilo diverge. |
-| Paginacion/filtros estandar | No | Si | Media | Alta | Bajo | Medio | Media/Alta | Medio | Media | Migrar como patron base | Media/Alta | Reusable para administracion. Mejor como composable/patron simple antes que framework rigido. |
+| Toasts globales | Si, `AppToastViewport` + `useToasts` | Si | Baja | Alta | Bajo | Bajo | Alta | Bajo | Alta | Implementado; usar flash Inertia | Completada | Los controladores pueden devolver `with('success'|'error'|'warning'|'info', ...)` y el layout muestra feedback global. |
+| Helper de errores HTTP/forms | Si, `FormErrorSummary` + `useFormErrors` | Si | Baja | Alta | Bajo | Bajo | Alta | Bajo/Medio | Alta | Implementado; combinar con `InputError` | Completada | Los formularios pueden mostrar resumen general y errores por campo sin duplicar normalizacion. |
+| Tabla/listado reusable | Si, `CrudTable` | Si | Baja/Media | Alta | Bajo | Bajo/Medio | Media/Alta | Medio | Media/Alta | Implementado; extender via slots | Completada | Acelera CRUDs con columnas declarativas, slots por celda y acciones sin imponer modelos de negocio. |
+| Paginacion/filtros estandar | Si, `CrudPagination` y `CrudSearchForm` | Si | Baja/Media | Alta | Bajo | Bajo/Medio | Media/Alta | Medio | Media/Alta | Implementado; ampliar solo si el modulo lo pide | Completada | Cubre busqueda simple GET y paginacion Laravel/Inertia reutilizable en administracion. |
 | FileDropzone/uploads | No | Si | Media | Media/Alta | Bajo | Medio | Media | Bajo/Medio | Media | Migrar como opcional | Media | Util en muchos proyectos, pero no universal. Debe quedar generico y sin modelo de archivos de negocio. |
 | Notificaciones in-app | No | Si | Alta | Media/Alta | Medio | Alto | Media/Alta | Alto | Media | Migrar base minima opcional | Media | Tiene valor transversal, pero requiere tablas, endpoints, UI y decisiones de retencion. Empezar con notificaciones simples, sin tipos de negocio. |
 | Push notifications | No | Si | Alta | Media | Medio | Alto | Media | Alto | Media/Baja | No migrar en primera fase | Baja/Media | Agrega VAPID, service worker, permisos navegador y edge cases. Mejor como modulo opcional posterior. |
 | Auditoria / activity log | No | Si | Media/Alta | Alta | Bajo/Medio | Medio/Alto | Media/Alta | Medio | Media | Disenar generico, no copiar | Media | Muy reusable, pero debe decidirse con paquete/patron estable y sin eventos de negocio especificos. |
 | Backups por modelo | No | Si | Alta | Media | Alto si se copia desde un proyecto concreto | Alto | Media | Alto | Media/Baja | No migrar todavia | Baja | Depende de tablas reales del proyecto. En el template solo debe quedar documentado el patron para proyectos derivados. |
 | Dashboard base | Si, placeholder | Si | Baja | Alta | Bajo | Bajo | Media | Bajo | Alta | Adecuar minimo | Media | Conviene mantenerlo generico y extensible, con slots/cards neutros o pantalla inicial limpia. |
-| CRUD generator / patron de modulo | Parcial, existe prompt `nuevo_modulo` y procedimientos | Si | Baja/Media | Alta | Bajo | Medio | Media/Alta | Medio | Alta | Fortalecer como documentacion/prompt | Media | Mejor como guia y prompt que como generador rigido. Evita imponer estructura de negocio demasiado temprano. |
+| CRUD generator / patron de modulo | Si, prompt/procedimiento alineado a Inertia + CRUD toolkit | Si | Baja | Alta | Bajo | Bajo/Medio | Media/Alta | Medio | Alta | Implementado como guia, no generador rigido | Completada | El patron indica backend, permisos, rutas, paginas Inertia, componentes CRUD y contexto sin imponer dominio. |
 | Cambio obligatorio de password / recordatorios | No | Si | Media | Media | Medio/Alto | Medio | Media | Medio | Media | No migrar tal cual | Baja | Es una regla de seguridad posible, pero no universal. Puede quedar como receta opcional, no como flujo base. |
 | pmsg/core/stores SPA | No | No aplica | Alta | Baja para este template | Alto | Alto | Baja | Alto | Baja | No migrar | Baja | Pertenece a un stack SPA distinto. El template actual usa Inertia + Wayfinder, por lo que seria una direccion arquitectonica incompatible. |
 
@@ -48,11 +48,13 @@ Escala usada:
    - Layout administrativo ajustado.
    - Toasts globales.
    - Helper de errores HTTP/forms.
+   - Estado: implementado como componentes y composables reutilizables.
 
 3. **CRUD toolkit**
    - Tabla/listado reusable.
    - Paginacion/filtros estandar.
    - Patron de modulo via prompts/procedimientos.
+   - Estado: implementado como toolkit UI y memoria operativa.
 
 4. **Modulos opcionales**
    - FileDropzone/uploads.

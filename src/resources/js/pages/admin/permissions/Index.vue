@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import {
+  CrudPageHeader,
+  CrudTable,
+  type CrudColumn,
+} from '@/components/crud';
+import FormErrorSummary from '@/components/forms/FormErrorSummary.vue';
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
@@ -34,6 +40,12 @@ const props = defineProps<{
 const breadcrumbs: BreadcrumbItem[] = [
   { title: 'Administration', href: '/admin/permissions' },
   { title: 'Permissions', href: '/admin/permissions' },
+];
+
+const permissionColumns: CrudColumn[] = [
+  { key: 'permission', label: 'Permission' },
+  { key: 'menu', label: 'Menu' },
+  { key: 'sort_order', label: 'Order' },
 ];
 
 const editingPermission = ref<PermissionRow | null>(null);
@@ -89,53 +101,44 @@ const submit = () => {
 
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="vstack gap-4">
-      <div>
-        <h1 class="h3 mb-1">Permissions</h1>
-        <p class="text-muted mb-0">Review base permissions and edit menu metadata.</p>
-      </div>
+      <CrudPageHeader
+        title="Permissions"
+        description="Review base permissions and edit menu metadata."
+      />
 
       <div class="row g-4">
         <div class="col-lg-7">
           <div class="card border-0 shadow-sm">
             <div class="card-body">
-              <div class="table-responsive">
-                <table class="table align-middle">
-                  <thead>
-                    <tr>
-                      <th>Permission</th>
-                      <th>Menu</th>
-                      <th>Order</th>
-                      <th class="text-end">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="permission in props.permissions" :key="permission.id">
-                      <td>
-                        <div class="fw-semibold">{{ permission.label || permission.name }}</div>
-                        <div class="text-muted small">{{ permission.name }}</div>
-                      </td>
-                      <td>
-                        <span
-                          class="badge"
-                          :class="permission.is_menu ? 'text-bg-success' : 'text-bg-secondary'"
-                        >
-                          {{ permission.is_menu ? 'Visible' : 'Hidden' }}
-                        </span>
-                      </td>
-                      <td>{{ permission.sort_order }}</td>
-                      <td class="text-end">
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-outline-primary"
-                          @click="editPermission(permission)"
-                        >
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              <CrudTable
+                :columns="permissionColumns"
+                :rows="props.permissions"
+                empty-message="No permissions found."
+              >
+                <template #cell-permission="{ row }">
+                  <div class="fw-semibold">{{ row.label || row.name }}</div>
+                  <div class="text-muted small">{{ row.name }}</div>
+                </template>
+
+                <template #cell-menu="{ row }">
+                  <span
+                    class="badge"
+                    :class="row.is_menu ? 'text-bg-success' : 'text-bg-secondary'"
+                  >
+                    {{ row.is_menu ? 'Visible' : 'Hidden' }}
+                  </span>
+                </template>
+
+                <template #actions="{ row }">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    @click="editPermission(row)"
+                  >
+                    Edit
+                  </button>
+                </template>
+              </CrudTable>
             </div>
           </div>
         </div>
@@ -148,6 +151,8 @@ const submit = () => {
               </h2>
 
               <form v-if="editingPermission" class="vstack gap-3" @submit.prevent="submit">
+                <FormErrorSummary :errors="form.errors" />
+
                 <div>
                   <label for="label" class="form-label">Label</label>
                   <input id="label" v-model="form.label" type="text" class="form-control" />

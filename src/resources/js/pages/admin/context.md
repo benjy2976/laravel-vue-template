@@ -53,6 +53,8 @@ Gestionar la base administrativa heredable del template: usuarios, roles, permis
 - `src/resources/js/pages/admin/permissions/Index.vue`
 - `src/resources/js/components/AppSidebar.vue`
 - `src/resources/js/components/NavMain.vue`
+- Las paginas admin usan el CRUD toolkit de `src/resources/js/components/crud/**`.
+- Las acciones administrativas devuelven flash messages para `AppToastViewport`.
 
 ## Errores esperables
 
@@ -68,3 +70,4 @@ Gestionar la base administrativa heredable del template: usuarios, roles, permis
 4. Crear un usuario con rol `user`.
 5. Crear un rol nuevo y asignarle permisos.
 6. Editar metadatos de menu de un permiso.
+7. Confirmar que las acciones muestran toast y errores de formulario cuando corresponde.

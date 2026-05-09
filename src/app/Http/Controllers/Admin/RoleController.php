@@ -61,7 +61,7 @@ class RoleController extends Controller
 
         $role->permissions()->sync($data['permission_ids'] ?? []);
 
-        return back();
+        return back()->with('success', 'Role created.');
     }
 
     /**
@@ -79,7 +79,7 @@ class RoleController extends Controller
 
         $role->permissions()->sync($data['permission_ids'] ?? []);
 
-        return back();
+        return back()->with('success', 'Role updated.');
     }
 
     /**
@@ -90,13 +90,15 @@ class RoleController extends Controller
         abort_unless($request->user()?->hasPermission('roles.delete'), 403);
 
         if ($role->is_system) {
-            return back()->withErrors([
-                'role' => 'System roles cannot be deleted.',
-            ]);
+            return back()
+                ->with('error', 'System roles cannot be deleted.')
+                ->withErrors([
+                    'role' => 'System roles cannot be deleted.',
+                ]);
         }
 
         $role->delete();
 
-        return back();
+        return back()->with('success', 'Role deleted.');
     }
 }

@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import {
+  CrudPageHeader,
+  CrudTable,
+  type CrudColumn,
+} from '@/components/crud';
+import FormErrorSummary from '@/components/forms/FormErrorSummary.vue';
 import InputError from '@/components/InputError.vue';
 import { useAuthorization } from '@/composables/useAuthorization';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -30,6 +36,11 @@ const props = defineProps<{
 const breadcrumbs: BreadcrumbItem[] = [
   { title: 'Administration', href: '/admin/roles' },
   { title: 'Roles', href: '/admin/roles' },
+];
+
+const roleColumns: CrudColumn[] = [
+  { key: 'role', label: 'Role' },
+  { key: 'permissions', label: 'Permissions' },
 ];
 
 const { can } = useAuthorization();
@@ -97,55 +108,48 @@ const destroyRole = (role: RoleRow) => {
 
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="vstack gap-4">
-      <div>
-        <h1 class="h3 mb-1">Roles</h1>
-        <p class="text-muted mb-0">Group permissions into reusable access profiles.</p>
-      </div>
+      <CrudPageHeader
+        title="Roles"
+        description="Group permissions into reusable access profiles."
+      />
 
       <div class="row g-4">
         <div class="col-lg-7">
           <div class="card border-0 shadow-sm">
             <div class="card-body">
-              <div class="table-responsive">
-                <table class="table align-middle">
-                  <thead>
-                    <tr>
-                      <th>Role</th>
-                      <th>Permissions</th>
-                      <th class="text-end">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="role in props.roles" :key="role.id">
-                      <td>
-                        <div class="fw-semibold">{{ role.label || role.name }}</div>
-                        <div class="text-muted small">{{ role.name }}</div>
-                      </td>
-                      <td>
-                        <span class="badge text-bg-secondary">{{ role.permissions.length }}</span>
-                      </td>
-                      <td class="text-end">
-                        <button
-                          v-if="can('roles.update')"
-                          type="button"
-                          class="btn btn-sm btn-outline-primary me-2"
-                          @click="editRole(role)"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          v-if="can('roles.delete') && !role.is_system"
-                          type="button"
-                          class="btn btn-sm btn-outline-danger"
-                          @click="destroyRole(role)"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              <CrudTable
+                :columns="roleColumns"
+                :rows="props.roles"
+                empty-message="No roles found."
+              >
+                <template #cell-role="{ row }">
+                  <div class="fw-semibold">{{ row.label || row.name }}</div>
+                  <div class="text-muted small">{{ row.name }}</div>
+                </template>
+
+                <template #cell-permissions="{ row }">
+                  <span class="badge text-bg-secondary">{{ row.permissions.length }}</span>
+                </template>
+
+                <template #actions="{ row }">
+                  <button
+                    v-if="can('roles.update')"
+                    type="button"
+                    class="btn btn-sm btn-outline-primary me-2"
+                    @click="editRole(row)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    v-if="can('roles.delete') && !row.is_system"
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    @click="destroyRole(row)"
+                  >
+                    Delete
+                  </button>
+                </template>
+              </CrudTable>
             </div>
           </div>
         </div>
@@ -156,6 +160,8 @@ const destroyRole = (role: RoleRow) => {
               <h2 class="h5 mb-3">{{ isEditing ? 'Edit role' : 'Create role' }}</h2>
 
               <form class="vstack gap-3" @submit.prevent="submit">
+                <FormErrorSummary :errors="form.errors" />
+
                 <div>
                   <label for="name" class="form-label">Name</label>
                   <input

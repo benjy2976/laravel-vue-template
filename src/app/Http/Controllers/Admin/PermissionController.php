@@ -67,6 +67,6 @@ class PermissionController extends Controller
             'sort_order' => $data['sort_order'] ?? 0,
         ]);
 
-        return back();
+        return back()->with('success', 'Permission metadata updated.');
     }
 }

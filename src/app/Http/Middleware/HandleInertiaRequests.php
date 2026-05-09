@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -46,6 +47,7 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => $this->authPayload($request),
+            'flash' => $this->flashPayload($request),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
@@ -86,6 +88,31 @@ class HandleInertiaRequests extends Middleware
                 ->map(fn (Permission $permission): string => $permission->name)
                 ->values(),
             'menu' => Permission::buildMenu($permissions),
+        ];
+    }
+
+    /**
+     * Share one-time feedback messages with the frontend.
+     *
+     * @return array<string, mixed>
+     */
+    private function flashPayload(Request $request): array
+    {
+        $messages = [
+            'success' => $request->session()->get('success'),
+            'error' => $request->session()->get('error'),
+            'warning' => $request->session()->get('warning'),
+            'info' => $request->session()->get('info'),
+            'status' => $request->session()->get('status'),
+        ];
+
+        $hasMessage = collect($messages)
+            ->filter(fn (mixed $message): bool => filled($message))
+            ->isNotEmpty();
+
+        return [
+            ...$messages,
+            'id' => $hasMessage ? (string) Str::uuid() : null,
         ];
     }
 }

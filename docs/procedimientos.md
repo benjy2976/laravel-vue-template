@@ -10,7 +10,7 @@ Concentrar los pasos operativos del template: entorno, desarrollo, validacion, C
 # Copiar variables base
 cp src/.env.example src/.env
 
-# Levantar servicios
+# Levantar servicios, incluido Vite HMR
 docker compose up -d --build
 
 # Instalar dependencias PHP
@@ -21,7 +21,7 @@ docker compose exec -u app app bash -lc "php artisan key:generate"
 docker compose exec -u app app bash -lc "php artisan storage:link"
 docker compose exec -u app app bash -lc "php artisan migrate"
 
-# Instalar dependencias JS
+# Instalar dependencias JS manualmente si no se levanto el servicio vite
 docker compose exec -u app app bash -lc "npm install"
 ```
 
@@ -35,8 +35,8 @@ Servicios esperados:
 ## Desarrollo
 
 ```bash
-# Vite HMR dentro del contenedor app
-docker compose exec -u app app bash -lc "npm run dev -- --host 0.0.0.0"
+# Ver logs del servicio Vite HMR
+docker compose logs -f vite
 
 # Desarrollo Laravel + Vite con scripts Composer, si se ejecuta localmente dentro de src
 cd src
@@ -112,10 +112,13 @@ Reglas sugeridas para proyectos derivados:
 
 1. Revisar si ya existe un area equivalente.
 2. Leer `docs/context-template.md`.
-3. Crear rutas/controladores/paginas siguiendo los patrones vecinos.
-4. Crear `context.md` del area.
-5. Indexar el contexto en `docs/guia_IA.md`.
-6. Agregar tests si hay reglas de backend o flujo critico.
+3. Definir permisos con el patron `<modulo>.(view|create|update|delete)` y menu si aplica.
+4. Crear migraciones, modelos, Form Requests, controladores Inertia y rutas web.
+5. Usar el CRUD toolkit en frontend: `CrudPageHeader`, `CrudTable`, `CrudPagination`, `CrudSearchForm`.
+6. Usar feedback transversal: `FormErrorSummary`, `InputError` y flash con `with('success'|'error'|'warning'|'info', ...)`.
+7. Crear `context.md` del area.
+8. Indexar el contexto en `docs/guia_IA.md`.
+9. Agregar tests si hay reglas de backend o flujo critico.
 
 ## Cierre tecnico obligatorio
 

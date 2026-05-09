@@ -3,20 +3,33 @@ services:
     build:
       context: ./docker/php
       dockerfile: Dockerfile
+    image: template-app
     container_name: laravel_app
     working_dir: /var/www/html
     volumes:
       - ./src:/var/www/html
     environment:
       PHP_IDE_CONFIG: "serverName=laravel"
-      # HMR (lo que verá el navegador):
-      VITE_HMR_HOST: localhost
-      VITE_HMR_PORT: "5173"
-      # Opcional: mejora detección de cambios en WSL/Windows
-      CHOKIDAR_USEPOLLING: "true"
     depends_on:
       - db
       - redis
+
+  vite:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    image: template-app
+    container_name: laravel_vite
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    command: sh -lc "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    environment:
+      VITE_HMR_HOST: localhost
+      VITE_HMR_PORT: "5173"
+      CHOKIDAR_USEPOLLING: "true"
+    depends_on:
+      - app
     ports:
       - "5173:5173"
       

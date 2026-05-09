@@ -21,12 +21,24 @@ export interface NavItem {
     children?: NavItem[];
 }
 
+export interface FlashMessages {
+    id: string | null;
+    success?: string | null;
+    error?: string | null;
+    warning?: string | null;
+    info?: string | null;
+    status?: string | null;
+}
+
+export type FormErrors = Record<string, string | string[] | undefined>;
+
 export type AppPageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
+    flash: FlashMessages;
     sidebarOpen: boolean;
 };
 

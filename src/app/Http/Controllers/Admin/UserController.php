@@ -71,7 +71,7 @@ class UserController extends Controller
 
         $user->roles()->sync($data['role_ids'] ?? []);
 
-        return back();
+        return back()->with('success', 'User created.');
     }
 
     /**
@@ -92,7 +92,7 @@ class UserController extends Controller
         $user->update($payload);
         $user->roles()->sync($data['role_ids'] ?? []);
 
-        return back();
+        return back()->with('success', 'User updated.');
     }
 
     /**
@@ -103,13 +103,15 @@ class UserController extends Controller
         abort_unless($request->user()?->hasPermission('users.delete'), 403);
 
         if ($request->user()?->is($user)) {
-            return back()->withErrors([
-                'user' => 'You cannot delete your own account from the user manager.',
-            ]);
+            return back()
+                ->with('error', 'You cannot delete your own account from the user manager.')
+                ->withErrors([
+                    'user' => 'You cannot delete your own account from the user manager.',
+                ]);
         }
 
         $user->delete();
 
-        return back();
+        return back()->with('success', 'User deleted.');
     }
 }

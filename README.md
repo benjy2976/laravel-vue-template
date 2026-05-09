@@ -28,7 +28,6 @@ docker compose exec -u app app bash -lc "composer install"
 docker compose exec -u app app bash -lc "php artisan key:generate"
 docker compose exec -u app app bash -lc "php artisan storage:link"
 docker compose exec -u app app bash -lc "php artisan migrate"
-docker compose exec -u app app bash -lc "npm install"
 ```
 
 Abrir:
@@ -38,10 +37,10 @@ Abrir:
 ## Desarrollo con Vite
 
 ```bash
-docker compose exec -u app app bash -lc "npm run dev -- --host 0.0.0.0"
+docker compose logs -f vite
 ```
 
-Vite queda expuesto en `http://localhost:5173`.
+Vite arranca automaticamente como servicio `vite` con `docker compose up` y queda expuesto en `http://localhost:5173`.
 
 ## Comandos utiles
 
