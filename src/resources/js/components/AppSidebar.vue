@@ -5,8 +5,10 @@ import NavUser from '@/components/NavUser.vue';
 import AppLogo from '@/components/AppLogo.vue';
 import { SIDEBAR_OFFCANVAS_ID, SIDEBAR_WIDTH } from '@/constants/layout';
 import { dashboard } from '@/routes';
-import { type NavItem } from '@/types';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { type AppPageProps, type NavItem } from '@/types';
+import { usePage } from '@inertiajs/vue3';
+import { BookOpen, Folder, KeyRound, LayoutGrid, Shield, ShieldCheck, Users } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -17,13 +19,45 @@ const props = withDefaults(
   },
 );
 
-const mainNavItems: NavItem[] = [
+const page = usePage<AppPageProps>();
+
+const iconMap = {
+  BookOpen,
+  Folder,
+  KeyRound,
+  LayoutGrid,
+  Shield,
+  ShieldCheck,
+  Users,
+};
+
+const fallbackNavItems: NavItem[] = [
   {
     title : 'Dashboard',
     href  : dashboard(),
     icon  : LayoutGrid,
   },
 ];
+
+const resolveIcon = (icon: NavItem['icon']) => {
+  if (!icon || typeof icon !== 'string') {
+    return icon;
+  }
+
+  return iconMap[icon as keyof typeof iconMap] || LayoutGrid;
+};
+
+const normalizeNavItem = (item: NavItem): NavItem => ({
+  ...item,
+  icon     : resolveIcon(item.icon),
+  children : item.children?.map(normalizeNavItem) ?? [],
+});
+
+const mainNavItems = computed<NavItem[]>(() => {
+  const menu = page.props.auth.menu ?? [];
+
+  return menu.length ? menu.map(normalizeNavItem) : fallbackNavItems;
+});
 
 const footerNavItems: NavItem[] = [
   {

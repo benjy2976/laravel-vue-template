@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
@@ -35,6 +36,48 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'remember_token',
     ];
+
+    /**
+     * Roles assigned to this user.
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    /**
+     * Resolve unique permissions assigned through roles.
+     *
+     * @return Collection<int, Permission>
+     */
+    public function resolvedPermissions(): Collection
+    {
+        $this->loadMissing('roles.permissions');
+
+        return $this->roles
+            ->flatMap(fn (Role $role): Collection => $role->permissions)
+            ->unique('id')
+            ->values();
+    }
+
+    /**
+     * Determine whether the user owns a permission.
+     */
+    public function hasPermission(string $permission): bool
+    {
+        return $this->resolvedPermissions()
+            ->contains(fn (Permission $item): bool => $item->name === $permission);
+    }
+
+    /**
+     * Determine whether the user owns a role.
+     */
+    public function hasRole(string $role): bool
+    {
+        $this->loadMissing('roles');
+
+        return $this->roles->contains(fn (Role $item): bool => $item->name === $role);
+    }
 
     /**
      * Get the attributes that should be cast.

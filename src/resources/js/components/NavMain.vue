@@ -9,7 +9,9 @@ const props = defineProps<{
 
 const page = usePage();
 
-const isActive = (href: NavItem['href']) => urlIsActive(href, page.url);
+const isActive = (href: NavItem['href']) => href !== '#' && urlIsActive(href, page.url);
+const hasChildren = (item: NavItem) => Array.isArray(item.children) && item.children.length > 0;
+const isGroupActive = (item: NavItem) => item.children?.some(child => isActive(child.href)) ?? false;
 </script>
 
 <template>
@@ -21,7 +23,44 @@ const isActive = (href: NavItem['href']) => urlIsActive(href, page.url);
                 :key="item.title"
                 class="nav-item"
             >
+                <template v-if="hasChildren(item)">
+                    <div
+                        class="d-flex align-items-center gap-2 px-3 py-2 small fw-semibold text-body-secondary"
+                        :class="{ 'text-primary': isGroupActive(item) }"
+                    >
+                        <component
+                            v-if="item.icon"
+                            :is="item.icon"
+                            class="opacity-75"
+                            :size="16"
+                        />
+                        <span>{{ item.title }}</span>
+                    </div>
+                    <ul class="nav nav-pills flex-column gap-1 ms-3 mt-1">
+                        <li
+                            v-for="child in item.children"
+                            :key="child.title"
+                            class="nav-item"
+                        >
+                            <Link
+                                :href="child.href"
+                                class="nav-link d-flex align-items-center gap-2 py-2"
+                                :class="{ active: isActive(child.href) }"
+                            >
+                                <component
+                                    v-if="child.icon"
+                                    :is="child.icon"
+                                    class="opacity-75"
+                                    :size="16"
+                                />
+                                <span>{{ child.title }}</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </template>
+
                 <Link
+                    v-else
                     :href="item.href"
                     class="nav-link d-flex align-items-center gap-2"
                     :class="{ active: isActive(item.href) }"

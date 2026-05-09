@@ -2,7 +2,10 @@ import { InertiaLinkProps } from '@inertiajs/vue3';
 import type { LucideIcon } from 'lucide-vue-next';
 
 export interface Auth {
-    user: User;
+    user: User | null;
+    roles: string[];
+    permissions: string[];
+    menu: NavItem[];
 }
 
 export interface BreadcrumbItem {
@@ -13,8 +16,9 @@ export interface BreadcrumbItem {
 export interface NavItem {
     title: string;
     href: NonNullable<InertiaLinkProps['href']>;
-    icon?: LucideIcon;
+    icon?: LucideIcon | string | null;
     isActive?: boolean;
+    children?: NavItem[];
 }
 
 export type AppPageProps<

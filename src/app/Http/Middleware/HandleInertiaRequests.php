@@ -2,6 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -42,10 +45,47 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
-            'auth' => [
-                'user' => $request->user(),
-            ],
+            'auth' => $this->authPayload($request),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+        ];
+    }
+
+    /**
+     * Build the shared authenticated user payload.
+     *
+     * @return array<string, mixed>
+     */
+    private function authPayload(Request $request): array
+    {
+        $user = $request->user();
+
+        if (! $user instanceof User) {
+            return [
+                'user' => null,
+                'roles' => [],
+                'permissions' => [],
+                'menu' => [],
+            ];
+        }
+
+        $permissions = $user->resolvedPermissions();
+
+        return [
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'email_verified_at' => $user->email_verified_at?->toISOString(),
+                'created_at' => $user->created_at?->toISOString(),
+                'updated_at' => $user->updated_at?->toISOString(),
+            ],
+            'roles' => $user->roles
+                ->map(fn (Role $role): string => $role->name)
+                ->values(),
+            'permissions' => $permissions
+                ->map(fn (Permission $permission): string => $permission->name)
+                ->values(),
+            'menu' => Permission::buildMenu($permissions),
         ];
     }
 }

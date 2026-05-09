@@ -9,6 +9,7 @@ Definir el mapa global del template, sus capas y el flujo base de datos entre La
 - Backend/app: Laravel 12, PHP 8.3, Fortify, Inertia Laravel, Wayfinder.
 - Frontend integrado: Vue 3, TypeScript, Inertia Vue, Vite, Tailwind CSS 4 y Bootstrap 5.
 - UI base: componentes propios y componentes `resources/js/components/ui/**`.
+- Administracion base: usuarios, roles, permisos y menu dinamico por permisos.
 - Tests: Pest/PHPUnit.
 - Infraestructura: Docker Compose con PHP-FPM, Nginx, PostgreSQL 17, Redis y Mailpit.
 
@@ -31,6 +32,7 @@ Definir el mapa global del template, sus capas y el flujo base de datos entre La
 src/
 ├── app/Actions/Fortify/          # Acciones de auth provistas por Fortify
 ├── app/Http/Controllers/         # Controladores web e Inertia
+├── app/Http/Middleware/           # Middleware web y autorizacion por permiso
 ├── app/Http/Requests/            # Form Requests reutilizables
 ├── app/Models/                   # Modelos Eloquent
 ├── app/Providers/                # Providers de Laravel y Fortify
@@ -65,6 +67,14 @@ src/resources/js/
 5. Formularios Inertia envian POST/PATCH/PUT/DELETE hacia rutas nombradas.
 6. Laravel valida, persiste y redirige o devuelve errores.
 
+## Base administrativa heredable
+
+- RBAC simple del template: `User` tiene muchos `Role`; `Role` tiene muchos `Permission`.
+- Middleware `permission:{name}` protege rutas administrativas reutilizables.
+- `RolePermissionSeeder` crea roles base `admin` y `user` con permisos genericos.
+- El sidebar autenticado consume `auth.menu`, generado desde permisos con metadatos de menu.
+- La UI administrativa vive en `src/resources/js/pages/admin/**` y solo cubre usuarios, roles y metadatos de permisos.
+
 ## Principios de diseno
 
 - Mantener el template generico y adaptable.
@@ -80,6 +90,7 @@ src/resources/js/
 - `src/resources/js/layouts/settings/Layout.vue`: shell de settings.
 - `src/resources/js/components/InputError.vue`: salida comun para errores de formularios.
 - `src/resources/js/composables/useAppearance.ts`: preferencia visual.
+- `src/resources/js/composables/useAuthorization.ts`: lectura de roles/permisos compartidos por Inertia.
 - `src/resources/js/composables/useTwoFactorAuth.ts`: flujo de two-factor.
 
 ## Donde vive cada tipo de conocimiento

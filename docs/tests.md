@@ -13,6 +13,9 @@ docker compose exec -u app app bash -lc "php artisan test"
 # Archivo puntual
 docker compose exec -u app app bash -lc "php artisan test tests/Feature/Auth/AuthenticationTest.php"
 
+# Base administrativa heredable
+docker compose exec -u app app bash -lc "php artisan test tests/Feature/Admin/AdminAccessTest.php"
+
 # Pest directo dentro de src
 cd src
 ./vendor/bin/pest
@@ -39,10 +42,14 @@ cd src
 - `tests/Feature/ExampleTest.php`
 - `tests/Unit/ExampleTest.php`
 
+### Admin base
+- `tests/Feature/Admin/AdminAccessTest.php`
+
 ## Reglas
 
 - Usar Pest para tests nuevos.
 - Priorizar feature tests para flujos Inertia/Laravel.
 - Al tocar auth, settings o middleware, ejecutar el test puntual relacionado.
 - Al tocar migraciones o modelo `User`, ejecutar auth/settings relacionados.
+- Al tocar roles, permisos, menu dinamico o administracion, ejecutar `tests/Feature/Admin/AdminAccessTest.php`.
 - Al tocar frontend sin backend, ejecutar build/lint segun alcance.

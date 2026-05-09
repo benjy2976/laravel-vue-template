@@ -40,3 +40,4 @@ Antes de actuar en cualquier tarea, leer `AGENT_PROTOCOL.md` y seguirlo como che
 - Auth: `src/resources/js/pages/auth/context.md`
 - Settings: `src/resources/js/pages/settings/context.md`
 - Pages/Dashboard: `src/resources/js/pages/context.md`
+- Admin base: `src/resources/js/pages/admin/context.md`
