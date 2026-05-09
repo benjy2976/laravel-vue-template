@@ -1,3 +1,13 @@
+# Memoria local del template
+
+Antes de aplicar las reglas Laravel Boost de este archivo, leer `../AGENT_PROTOCOL.md` desde la raiz del repositorio.
+Este archivo conserva reglas de stack y framework; la memoria operativa vive en `../docs/` y `../.github/`.
+Si hay conflicto entre `src/AGENTS.md` y la memoria raiz, detenerse y pedir confirmacion.
+
+Mantener este repositorio como template generico: no introducir logica de negocio especifica sin aprobacion.
+
+---
+
 <laravel-boost-guidelines>
 === foundation rules ===
 

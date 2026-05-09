@@ -10,25 +10,35 @@ logs:
 	docker compose logs -f --tail=100
 
 sh:
-	docker compose exec app bash
+	docker compose exec -u app app bash
+
+install:
+	docker compose exec -u app app bash -lc 'composer install'
+	docker compose exec -u app app bash -lc 'npm install'
 
 init:
-	# Create a fresh Laravel project inside ./src
-	docker compose exec -u app app bash -lc 'if [ -f artisan ]; then echo "✔ Laravel ya existe"; else composer create-project laravel/laravel .; fi'
-	docker compose exec -u app app bash -lc 'php artisan key:generate'
-	docker compose exec -u app app bash -lc 'php artisan storage:link'
+	docker compose exec -u app app bash -lc 'test -f .env || cp .env.example .env'
+	docker compose exec -u app app bash -lc 'php artisan key:generate || true'
+	docker compose exec -u app app bash -lc 'php artisan storage:link || true'
+	docker compose exec -u app app bash -lc 'php artisan migrate'
 
 migrate:
-	docker compose exec app bash -lc 'php artisan migrate'
+	docker compose exec -u app app bash -lc 'php artisan migrate'
 
 seed:
-	docker compose exec app bash -lc 'php artisan db:seed'
+	docker compose exec -u app app bash -lc 'php artisan db:seed'
+
+test:
+	docker compose exec -u app app bash -lc 'php artisan test'
+
+pint:
+	docker compose exec -u app app bash -lc 'vendor/bin/pint'
 
 npm-install:
-	docker compose run --rm node sh -lc 'npm ci || npm install'
+	docker compose exec -u app app bash -lc 'npm install'
 
 npm-dev:
-	docker compose run --rm -p 5173:5173 node sh -lc 'npm run dev -- --host'
+	docker compose exec -u app app bash -lc 'npm run dev -- --host 0.0.0.0'
 
 npm-build:
-	docker compose run --rm node sh -lc 'npm run build'
+	docker compose exec -u app app bash -lc 'npm run build'
